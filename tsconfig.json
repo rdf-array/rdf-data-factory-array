@@ -5,6 +5,7 @@
     "lib": [
       "es6"
     ],
+    "rootDir": ".",
     "module": "commonjs",
     "types": [
       "node",
@@ -15,11 +16,10 @@
     "declaration": true,
     "importHelpers": false,
     "inlineSources": true,
+    "outDir": "dist",
     "preserveConstEnums": true,
     "removeComments": false,
-    "sourceMap": true,
-    "outDir": "dist",
-    "rootDir": "."
+    "sourceMap": true
   },
   "include": [
     "index.ts",

@@ -24,6 +24,7 @@
     "rdf terms"
   ],
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "files": [
     "dist/**/*.d.ts",
     "dist/**/*.js",
@@ -83,6 +84,5 @@
   },
   "resolutions": {
     "@rdfjs/types": "github:rdf-array/types-array#rdf-sequences"
-  },
-  "types": "dist/index.d.ts"
+  }
 }
