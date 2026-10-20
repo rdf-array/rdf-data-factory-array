@@ -1,3 +1,18 @@
+<img src=".github/rdf-array-logo.png" alt="[rdf-data-factory]" width="96" align="right">
+
+# rdf-data-factory-array: rdf-data-factory for RDF-
+
+**RDF-** fork of [rdf-data-factory](https://github.com/rubensworks/rdf-data-factory.js): the data
+model gets a fifth kind of term, the **sequence** (`termType: "Sequence"`), an ordered, immutable
+sequence of terms, which is what `(1 2 3)` is in Turtle instead of an `rdf:first`/`rdf:rest` ladder;
+`()` is the empty sequence, not `rdf:nil`. `DataFactory.sequence(elements)` creates one, `elements`
+holds its terms, `value` its N-Triples-style spelling, `equals` compares element by element, and
+`fromTerm` deep-copies it. `@rdfjs/types` resolves to [types-array](https://github.com/rdf-array/types-array),
+which declares the term. Part of the [comunica-array](https://github.com/rdf-array/comunica-array)
+stack, whose doc/rdf-array.md lists the sibling forks.
+
+---
+
 # RDF Data Factory
 
 [![Build status](https://github.com/rubensworks/rdf-data-factory.js/workflows/CI/badge.svg)](https://github.com/rubensworks/rdf-data-factory.js/actions?query=workflow%3ACI)
