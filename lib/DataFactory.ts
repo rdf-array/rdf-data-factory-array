@@ -4,6 +4,7 @@ import { DefaultGraph } from './DefaultGraph';
 import { Literal } from './Literal';
 import { NamedNode } from './NamedNode';
 import { Quad } from './Quad';
+import { Sequence } from './Sequence';
 import { Variable } from './Variable';
 
 let dataFactoryCounter = 0;
@@ -92,6 +93,16 @@ export class DataFactory<TQ extends RDF.BaseQuad = RDF.Quad> implements RDF.Data
   }
 
   /**
+   * RDF-: create a sequence term, an ordered sequence of terms that is itself a term.
+   * @param elements The elements of the sequence, in order.
+   * @return A new instance of Sequence.
+   * @see Sequence
+   */
+  public sequence(elements: Iterable<RDF.Term>): Sequence {
+    return new Sequence(elements);
+  }
+
+  /**
    * Create a deep copy of the given term using this data factory.
    * @param original An RDF term.
    * @return A deep copy of the given term.
@@ -131,6 +142,9 @@ export class DataFactory<TQ extends RDF.BaseQuad = RDF.Quad> implements RDF.Data
           <TQ['object']> this.fromTerm((<TQ> <unknown> original).object),
           <TQ['graph']> this.fromTerm((<TQ> <unknown> original).graph),
         );
+      case 'Sequence':
+        // eslint-disable-next-line ts/no-unsafe-return
+        return <any> this.sequence(original.elements.map(element => this.fromTerm(element)));
     }
   }
 

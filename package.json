@@ -83,5 +83,8 @@
         "statements": 100
       }
     }
+  },
+  "resolutions": {
+    "@rdfjs/types": "github:rdf-array/types-array#rdf-sequences"
   }
 }

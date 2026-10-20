@@ -4,4 +4,5 @@ export * from './lib/DefaultGraph';
 export * from './lib/Literal';
 export * from './lib/NamedNode';
 export * from './lib/Quad';
+export * from './lib/Sequence';
 export * from './lib/Variable';

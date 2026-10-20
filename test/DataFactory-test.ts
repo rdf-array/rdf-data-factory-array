@@ -565,3 +565,106 @@ describe('DataFactory', () => {
     });
   });
 });
+
+describe('DataFactory for RDF-', () => {
+  const factory = new DataFactory({ blankNodePrefix: 'test_' });
+  const xsdInteger = factory.namedNode('http://www.w3.org/2001/XMLSchema#integer');
+
+  it('to have correct typings', () => {
+    const _otherFactory: RDF.DataFactory = factory;
+  });
+
+  describe('sequence', () => {
+    it('should produce a sequence term holding its elements in order', () => {
+      const sequence: RDF.Sequence = factory.sequence([
+        factory.literal('1', xsdInteger),
+        factory.namedNode('ex:a'),
+      ]);
+      expect(sequence.termType).toBe('Sequence');
+      expect(sequence.elements).toHaveLength(2);
+      expect(sequence.elements[0].equals(factory.literal('1', xsdInteger))).toBe(true);
+      expect(sequence.elements[1].equals(factory.namedNode('ex:a'))).toBe(true);
+      expect(sequence.value).toBe('("1"^^<http://www.w3.org/2001/XMLSchema#integer> <ex:a>)');
+    });
+
+    it('should produce the empty sequence', () => {
+      const sequence = factory.sequence([]);
+      expect(sequence.elements).toHaveLength(0);
+      expect(sequence.value).toBe('()');
+    });
+
+    it('should accept any iterable and freeze the elements', () => {
+      const sequence = factory.sequence(new Set([ factory.namedNode('ex:a') ]));
+      expect(sequence.elements).toHaveLength(1);
+      expect(Object.isFrozen(sequence.elements)).toBe(true);
+    });
+
+    it('should nest', () => {
+      const sequence = factory.sequence([
+        factory.sequence([ factory.literal('1', xsdInteger) ]),
+        factory.sequence([]),
+      ]);
+      expect(sequence.elements).toHaveLength(2);
+      expect(sequence.value).toBe('(("1"^^<http://www.w3.org/2001/XMLSchema#integer>) ())');
+    });
+
+    it('should spell every kind of element in its value', () => {
+      const sequence = factory.sequence([
+        factory.blankNode('b'),
+        factory.variable('v'),
+        factory.literal('say "hi"\n', 'en'),
+        factory.literal('x', { language: 'en', direction: 'ltr' }),
+        factory.literal('plain'),
+        factory.defaultGraph(),
+        factory.quad(factory.namedNode('ex:s'), factory.namedNode('ex:p'), factory.literal('o')),
+        factory.quad(factory.namedNode('ex:s'), factory.namedNode('ex:p'), factory.literal('o'), factory.namedNode('ex:g')),
+      ]);
+      expect(sequence.value).toBe('(_:b ?v "say \\"hi\\"\\n"@en "x"@en--ltr "plain"  ' +
+        '<<<ex:s> <ex:p> "o">> <<<ex:s> <ex:p> "o" <ex:g>>>)');
+    });
+
+    it('should handle equals', () => {
+      const sequence = factory.sequence([ factory.literal('1', xsdInteger), factory.namedNode('ex:a') ]);
+      expect(sequence.equals(null)).toBe(false);
+      expect(sequence.equals()).toBe(false);
+      expect(sequence.equals(factory.namedNode('ex:a'))).toBe(false);
+      expect(sequence.equals(factory.sequence([]))).toBe(false);
+      expect(sequence.equals(factory.sequence([ factory.literal('1', xsdInteger) ]))).toBe(false);
+      expect(sequence.equals(factory.sequence([ factory.namedNode('ex:a'), factory.literal('1', xsdInteger) ])))
+        .toBe(false);
+      expect(sequence.equals(factory.sequence([ factory.literal('1', xsdInteger), factory.namedNode('ex:a') ])))
+        .toBe(true);
+      expect(sequence.equals(sequence)).toBe(true);
+    });
+
+    it('should equal a sequence from another implementation with equal elements', () => {
+      const sequence = factory.sequence([ factory.namedNode('ex:a') ]);
+      const other: RDF.Sequence = {
+        termType: 'Sequence',
+        value: 'something else',
+        elements: [{
+          termType: 'NamedNode',
+          value: 'ex:a',
+          equals: (t?: RDF.Term | null) => !!t && t.termType === 'NamedNode' && t.value === 'ex:a',
+        }],
+        equals: () => false,
+      };
+      expect(sequence.equals(other)).toBe(true);
+    });
+  });
+
+  describe('fromTerm', () => {
+    it('should create a deep copy of a sequence', () => {
+      const input = factory.sequence([
+        factory.literal('1', xsdInteger),
+        factory.sequence([ factory.blankNode('b') ]),
+      ]);
+      const output: RDF.Sequence = factory.fromTerm(input);
+      expect(output).not.toBe(input);
+      expect(output.elements[0]).not.toBe(input.elements[0]);
+      expect(output.elements[1]).not.toBe(input.elements[1]);
+      expect(output.equals(input)).toBe(true);
+      expect(output.value).toBe(input.value);
+    });
+  });
+});
