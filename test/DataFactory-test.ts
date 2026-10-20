@@ -617,7 +617,12 @@ describe('DataFactory for RDF-', () => {
         factory.literal('plain'),
         factory.defaultGraph(),
         factory.quad(factory.namedNode('ex:s'), factory.namedNode('ex:p'), factory.literal('o')),
-        factory.quad(factory.namedNode('ex:s'), factory.namedNode('ex:p'), factory.literal('o'), factory.namedNode('ex:g')),
+        factory.quad(
+          factory.namedNode('ex:s'),
+          factory.namedNode('ex:p'),
+          factory.literal('o'),
+          factory.namedNode('ex:g'),
+        ),
       ]);
       expect(sequence.value).toBe('(_:b ?v "say \\"hi\\"\\n"@en "x"@en--ltr "plain"  ' +
         '<<<ex:s> <ex:p> "o">> <<<ex:s> <ex:p> "o" <ex:g>>>)');

@@ -7,6 +7,13 @@ import type * as RDF from '@rdfjs/types';
  * nodes, and `()` is the empty sequence rather than rdf:nil. A sequence is immutable, and two
  * sequences are equal when their elements are pairwise equal.
  */
+const LITERAL_ESCAPES: Record<string, string> = {
+  '"': '\\"',
+  '\\': '\\\\',
+  '\n': '\\n',
+  '\r': '\\r',
+};
+
 export class Sequence implements RDF.Sequence {
   public readonly termType = 'Sequence';
   public readonly elements: readonly RDF.Term[];
@@ -43,10 +50,8 @@ export class Sequence implements RDF.Sequence {
         return '';
       case 'Literal':
         return `"${term.value
-          .replaceAll('\\', '\\\\')
-          .replaceAll('"', '\\"')
-          .replaceAll('\n', '\\n')
-          .replaceAll('\r', '\\r')}"${
+          // eslint-disable-next-line unicorn/prefer-string-replace-all
+          .replace(/["\\\n\r]/gu, char => LITERAL_ESCAPES[char])}"${
           term.language ?
             `@${term.language}${term.direction ? `--${term.direction}` : ''}` :
             (term.datatype.value === 'http://www.w3.org/2001/XMLSchema#string' ?
