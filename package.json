@@ -23,14 +23,11 @@
     "data model",
     "rdf terms"
   ],
-  "main": "index.js",
+  "main": "dist/index.js",
   "files": [
-    "index.d.ts",
-    "index.js",
-    "index.js.map",
-    "lib/**/*.d.ts",
-    "lib/**/*.js",
-    "lib/**/*.js.map"
+    "dist/**/*.d.ts",
+    "dist/**/*.js",
+    "dist/**/*.js.map"
   ],
   "scripts": {
     "test": "jest ${1}",
@@ -86,5 +83,6 @@
   },
   "resolutions": {
     "@rdfjs/types": "github:rdf-array/types-array#rdf-sequences"
-  }
+  },
+  "types": "dist/index.d.ts"
 }

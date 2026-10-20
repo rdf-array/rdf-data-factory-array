@@ -6,7 +6,10 @@
       "es6"
     ],
     "module": "commonjs",
-    "types": ["node", "jest"],
+    "types": [
+      "node",
+      "jest"
+    ],
     "strict": true,
     "noImplicitAny": true,
     "declaration": true,
@@ -14,7 +17,9 @@
     "inlineSources": true,
     "preserveConstEnums": true,
     "removeComments": false,
-    "sourceMap": true
+    "sourceMap": true,
+    "outDir": "dist",
+    "rootDir": "."
   },
   "include": [
     "index.ts",
